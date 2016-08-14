@@ -12,6 +12,8 @@ namespace NewExplorador
 {
     public partial class Form1 : Form
     {
+        RecorrerDirectorio r = new RecorrerDirectorio("c:\\");
+
         public Form1()
         {
             InitializeComponent();
@@ -19,10 +21,24 @@ namespace NewExplorador
 
         private void button1_Click(object sender, EventArgs e)
         {
-            RecorrerDirectorio r = new RecorrerDirectorio("c:\\");
-            Console.WriteLine(r.filtrar());
+           
+
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView1.DataSource = r.filtrar();
+
+            comboBox1.DataSource = r.ObtenerExtensiones(); 
 
 
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex > 0)
+            {
+                dataGridView1.DataSource = r.filtrar(comboBox1.SelectedItem.ToString());
+            }
+            else
+                dataGridView1.DataSource = r.filtrar();
 
         }
     }

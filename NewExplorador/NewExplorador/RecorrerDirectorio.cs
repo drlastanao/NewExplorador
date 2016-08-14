@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,6 +9,7 @@ namespace NewExplorador
     {
         private string strDirectorio;
         private List<Items> itContenido;
+        private List<string> extensiones;
 
 
         public RecorrerDirectorio(string directorio)
@@ -26,20 +28,53 @@ namespace NewExplorador
             FileInfo[] files = directory.GetFiles("*.*");
             DirectoryInfo[] directories = directory.GetDirectories();
 
-            for (int i = 0; i < files.Length; i++)
-            {
-                itContenido.Add(new Items(files[i].FullName, files[i]));
-            }
+            extensiones = new List<string>();
+            extensiones.Add("Cualquiera");
+
 
             for (int i = 0; i < directories.Length; i++)
             {
                 itContenido.Add(new Items(directories[i].FullName, directories[i]));
+                if (i == 0)
+                {
+                    extensiones.Add("<DIR>");
+                }
+
             }
 
+
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                itContenido.Add(new Items(files[i].FullName, files[i]));
+                if (!extensiones.Contains(files[i].Extension))
+                    extensiones.Add(files[i].Extension);
+
+            }
+
+        
            
 
         }
 
+        internal object filtrar(string selectedItem)
+        {
+            List<Items> resultado = new List<Items>();
+            foreach (var item in itContenido)
+            {
+                if (item.Tipo==selectedItem)
+                    resultado.Add(item);
+            }
+
+            return resultado;
+
+
+        }
+
+        internal object ObtenerExtensiones()
+        {
+            return extensiones;
+        }
 
         public List<Items> filtrar()
         {
